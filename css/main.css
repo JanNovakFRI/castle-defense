@@ -1,0 +1,182 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('../images/castle.png');
+    background-repeat: no-repeat no-repeat;
+    background-position: bottom right;
+    background-size: 300px 300px;
+    margin: 0;
+    padding: 0;
+}
+
+h1.title {
+    color: #34495e;
+    padding: 40px 15px;
+    font-family: 'Wellfleet', cursive;
+}
+
+.container {
+    padding: 0 15px;
+    text-align: center;
+}
+
+.crosshair {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: calc(50% + 50px);
+    left: calc(50% - 10px);
+    pointer-events: none;
+    z-index: 999;
+
+}
+
+.crosshair img {
+    pointer-events: none;
+}
+
+canvas {
+    border: 1px solid #ecf0f1;
+}
+
+#content {
+    position: relative;
+}
+
+.healthbar {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 150px;
+    height: 20px;
+    text-align: right;
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.6),1px 1px rgba(0, 0, 0, 0.6);
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.healthbar span {
+    width: 10px;
+    border-radius: 4px;
+    background: red;
+    display: inline-block;
+    height: 20px;
+    margin-left: 2px;
+    border: 1px solid #34495e;
+}
+
+.healthbar span:nth-last-of-type(10) {
+     background:#65ff00;
+}
+
+.healthbar span:nth-last-of-type(9) {
+     background:#a5f700;
+}
+
+.healthbar span:nth-last-of-type(8) {
+     background:#ccff00;
+}
+
+.healthbar span:nth-last-of-type(7) {
+     background:#f0f600;
+}
+
+.healthbar span:nth-last-of-type(6) {
+     background:#f8e300;
+}
+
+.healthbar span:nth-last-of-type(5) {
+     background:#ffb600;
+}
+
+.healthbar span:nth-last-of-type(4) {
+     background:#ff9800;
+}
+
+.healthbar span:nth-last-of-type(3) {
+     background:#ff8300;
+}
+
+.healthbar span:nth-last-of-type(2) {
+     background:#d64225;
+}
+
+.healthbar span:nth-last-of-type(1) {
+     background:#dd2c19;
+}
+
+.healthbar span.no {
+    background-color: #ebebeb;
+}
+
+.healthbar .title {
+    font-weight: bold;
+    margin-bottom: 4px;
+    font-family: 'Wellfleet', cursive;
+    text-transform: uppercase;
+    color: #009fd7;
+}
+
+.gameover,.startgame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 159, 215, 0.9);
+    z-index: 999999999999999;
+    color: white;
+    display: none;
+}
+
+.startgame {
+    display: block;
+}
+
+.gameover .score {
+    font-family: 'Wellfleet', cursive;
+    font-size: 30px;
+    margin-top: 80px;
+}
+
+.startgame .welcome {
+    font-family: 'Wellfleet', cursive;
+    font-size: 22px;
+    margin-top: 200px;
+}
+
+.gameover #restart,.startgame #start {
+    margin-top: 100px;
+    padding: 30px 30px;
+    background-color: white;
+    color: #009fd7;
+    display: inline-block;
+    box-shadow: 2px 2px 20px 0px rgba(0, 0, 0, 0.26);
+    font-family: 'Wellfleet', cursive;
+    transform: skew(10deg,10deg);
+    cursor: pointer;
+    font-size: 22px;
+    transition: .4s all;
+}
+
+.gameover #restart {
+    margin-top: 80px;
+}
+
+.gameover #restart:hover,.startgame #start:hover {
+    background-color: rgb(198, 128, 69);
+    color: white;
+}
+
+.gameover #restart span,.startgame #start span {
+    display: block;
+    transform: skew(-10deg,-10deg);
+}
+
+.c-wrapper {
+    position: relative;
+    display: inline-block;
+}

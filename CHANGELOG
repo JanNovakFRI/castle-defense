@@ -1,0 +1,20 @@
+v 1.0.1
+- Project organization
+- Option to organize models with folders
+
+v 1.0.2
+- Scene graph
+- New models (castle, monsters & weapons)
+- File structure organization
+- main.js represents game logic
+
+v 1.0.3
+- Shooting arrows
+- Scene loaded from json
+- Simple Level Editor (Only adding of elements)
+- Compressed images for 41% smaller package
+
+v 1.0.3
+- game logic (scores)
+- enemies are spawning on random locations
+- every round game is harder

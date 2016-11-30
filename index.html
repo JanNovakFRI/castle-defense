@@ -1,0 +1,155 @@
+<html>
+	<head>
+		<title>WebGL - Castle Defense</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="css/main.css" type="text/css">
+
+		<!-- Helpers -->
+		<script src="helpers/gl-matrix-min.js" type="text/javascript"></script>
+		<script src="helpers/functions.js" type="text/javascript"></script>
+		<script src="helpers/handlers.js" type="text/javascript"></script>
+		<script src="helpers/scene.js" type="text/javascript"></script>
+		<script src="helpers/spawns.js" type="text/javascript"></script>
+
+		<!-- Classes -->
+		<script src="classes/class-arrow.js" type="text/javascript"></script>
+		<script src="classes/class-camera.js" type="text/javascript"></script>
+		<script src="classes/class-aabb.js" type="text/javascript"></script>
+		<script src="classes/class-parser.js" type="text/javascript"></script>
+		<script src="classes/class-reader.js" type="text/javascript"></script>
+		<script src="classes/class-model.js" type="text/javascript"></script>
+		<script src="classes/class-player.js" type="text/javascript"></script>
+		<script src="classes/class-mouse_picker.js" type="text/javascript"></script>
+
+		<!-- Logic -->
+		<script src="js/init.js" type="text/javascript"></script>
+		<script src="js/main.js" type="text/javascript"></script>
+
+		<!-- Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Wellfleet" rel="stylesheet">
+
+		<!-- Wireframe Shaders -->
+		<script id="wireframe-shader-fs" type="x-shader/x-fragment">
+		    precision mediump float;
+
+		    void main(void) {
+				gl_FragColor = vec4(41.0/255.0,128.0/255.0,185.0/255.0,1.0);
+		    }
+	    </script>
+
+		<script id="wireframe-shader-vs" type="x-shader/x-vertex">
+		    attribute vec3 aVertexPosition;
+			uniform mat4 uMVMatrix;
+		    uniform mat4 uPMatrix;
+			uniform mat4 uVMatrix;
+
+		    void main(void) {
+		        gl_Position = uPMatrix * uVMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+		    }
+	    </script>
+
+	    <!-- Fragment shader program -->
+	    <script id="shader-fs" type="x-shader/x-fragment">
+		    precision mediump float;
+
+			varying vec2 vTextureCoord;
+			varying vec3 transformedNormal;
+			varying vec4 vPosition;
+
+			varying float visibility;
+			vec3 skyColor = vec3(236.0/255.0, 250.0/255.0, 254.0/255.0);
+
+			uniform sampler2D uSampler;
+
+			uniform vec3 uAmbientColor; // ambient color uniform
+			uniform vec3 uLightingDirection; // directional light direction
+			uniform vec3 uDirectionalColor; // directional light color
+
+		    void main(void) {
+				vec3 lightWeighting;
+				vec4 outColor;
+
+				vec3 lightDirection = normalize(uLightingDirection - vPosition.xyz);
+				float directionalLightWeighting = max(dot(normalize(transformedNormal), lightDirection), 0.5);
+
+				lightWeighting = uAmbientColor + uDirectionalColor * directionalLightWeighting;
+
+				vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+				outColor = vec4(textureColor.rgb * lightWeighting, textureColor.a);
+
+				outColor = mix(vec4(skyColor,1.0), outColor, visibility);
+
+				gl_FragColor = outColor;
+		    }
+	    </script>
+
+	    <!-- Vertex shader program -->
+	    <script id="shader-vs" type="x-shader/x-vertex">
+    		// atributes for setting vertex position, texture and normals
+		    attribute vec3 aVertexPosition;
+			attribute vec2 aTextureCoord;
+			attribute vec3 aVertexNormal;
+
+		    uniform mat4 uMVMatrix;		// model matrix
+			uniform mat4 uVMatrix;		// view matrix
+		    uniform mat4 uPMatrix;		// projection matrix
+			uniform mat3 uNMatrix; 		// normals matrix
+
+			varying vec2 vTextureCoord;
+			varying vec3 transformedNormal;
+			varying vec4 vPosition;
+
+			const float density = 0.01;
+			const float gradient = 2.05;
+
+			varying float visibility;
+
+		    void main(void) {
+				vec4 positionRelativeToCam = uVMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+		        gl_Position = uPMatrix * positionRelativeToCam;
+
+				vTextureCoord = aTextureCoord;
+
+				vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+				transformedNormal = uNMatrix * aVertexNormal;
+
+				float distance = length(positionRelativeToCam.xyz);
+				visibility = exp(-pow((distance*density),gradient));
+				visibility = clamp(visibility,0.0,1.0);
+		    }
+	    </script>
+	</head>
+	<body onload="start()">
+		<div class="container">
+			<h1 class="title">Castle Defense</h1>
+			<div id="content">
+
+				<div id="crosshair" class="crosshair">
+					<img src="images/crosshair.png" height="40" width="40" />
+				</div>
+				<div class="c-wrapper">
+					<canvas id="canvas" width="1280" height="720" onclick="requestLock()">
+						No <code>&lt;canvas&gt;</code> suppport in your browser.
+					</canvas>
+					<div class="healthbar">
+						<div class="title">Castle Health</div>
+					</div>
+					<div class="gameover">
+						<div class="restart">
+							<div id="restart" onclick="restartGame()"><span>TRY AGAIN<span></div>
+						</div>
+						<div class="score">Score: <span id="score_val"></span></div>
+					</div>
+					<div class="startgame">
+						<div class="welcome">Welcome to castle defense game. Your job? Just survive as long as possible!</div>
+						<div class="start">
+							<div id="start" onclick="startGame()"><span>START GAME<span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="readme"></div>
+		</div>
+
+	</body>
+</html>
